@@ -25,7 +25,11 @@ with st.sidebar:
         submit_button = st.form_submit_button(label='Submit')
 
 if query and youtube_url:
-    db = lch.create_vector_db_from_youtube_url(youtube_url)
-    response, docs = lch.get_response_from_query(db, query)
-    st.subheader("Answer:")
-    st.text(textwrap.fill(response, width=85))
+    if not openai_api_key:
+        st.info("Please add your OpenAI API key to continue.")
+        st.stop()
+    else:
+        db = lch.create_db_from_youtube_video_url(youtube_url)
+        response, docs = lch.get_response_from_query(db, query)
+        st.subheader("Answer:")
+        st.text(textwrap.fill(response, width=85))
